@@ -1,39 +1,38 @@
 import React from 'react';
 import { useState } from 'react';
 import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet } from 'react-native';
+import Login from '../screens/Login';
 
 
-export default function App() {
+export default function Signup() {
   const [email, setEmail] = useState('Email Address')
   const [password, setPassword] = useState('Password')
 
-  return (
+
+  return(
     <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <View style={{ paddingHorizontal: 25}}>
+        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#483C32', marginBottom: 30 }}>SIGNUP</Text>
 
-        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#483C32', marginBottom: 30 }}>LOGIN</Text> 
-
-        <View style={{ alignItems: 'center'}}> 
+        <View style={{ alignItems: 'center'}}>
           <View style={styles.input}>
             <TextInput onChange={setEmail} placeholder='Email Address' style={{ paddingVertical: 0 }} keyboardType="email-address" />
-          </View> 
+          </View>
 
           <View style={styles.input}>
-            <TextInput onChange={setPassword} placeholder='Password' style={{ paddingVertical: 0 }} secureTextEntry={true} />
+            <TextInput onChange={setPassword} placeholder='Create Password' style={{ paddingVertical: 0 }} secureTextEntry={true} />
+          </View>
+
+          <View style={styles.input}>
+            <TextInput onChange={setPassword} placeholder='Confirm Password' style={{ paddingVertical: 0 }} secureTextEntry={true} />
           </View>
 
           <Pressable onPress={() => {}} style={styles.button}>
-            <Text style={styles.text}>SUBMIT</Text>
+            <Text style={styles.text}>GET STARTED</Text>
           </Pressable>
 
-          <Text style={{ justifyContent: 'center', color: '#483C32', marginTop: 20, marginBottom: 10 }}>Are you new here?</Text>
-
-          <Pressable onPress={() => { }} style={styles.button}>
-            <Text style={styles.text}>SIGNUP</Text>
-          </Pressable>
         </View>
-
-    </View>
+      </View>
     </SafeAreaView>
   );
 }
