@@ -1,33 +1,31 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet } from 'react-native';
-import Login from '../screens/Login';
 
-
-export default function Signup() {
+export default function Signup({ navigation }) {
   const [email, setEmail] = useState('Email Address')
   const [password, setPassword] = useState('Password')
+  
 
 
   return(
     <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <View style={{ paddingHorizontal: 25}}>
-        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#483C32', marginBottom: 30 }}>SIGNUP</Text>
+        <Text style={{fontSize: 30, fontWeight: 'bold', color: '#483C32', marginBottom: 30}}>SIGNUP</Text>
 
-        <View style={{ alignItems: 'center'}}>
+        <View style={{alignItems: 'center'}}>
           <View style={styles.input}>
-            <TextInput onChange={setEmail} placeholder='Email Address' style={{ paddingVertical: 0 }} keyboardType="email-address" />
+            <TextInput onChange={setEmail} placeholder='Email Address' style={{paddingVertical: 0}} keyboardType="email-address" />
           </View>
 
           <View style={styles.input}>
-            <TextInput onChange={setPassword} placeholder='Create Password' style={{ paddingVertical: 0 }} secureTextEntry={true} />
+            <TextInput onChange={setPassword} placeholder='Create Password' style={{paddingVertical: 0}} secureTextEntry={true} />
           </View>
 
           <View style={styles.input}>
-            <TextInput onChange={setPassword} placeholder='Confirm Password' style={{ paddingVertical: 0 }} secureTextEntry={true} />
+            <TextInput onChange={setPassword} placeholder='Confirm Password' style={{paddingVertical: 0}} secureTextEntry={true} />
           </View>
 
-          <Pressable onPress={() => {}} style={styles.button}>
+          <Pressable onPress={() => navigation.navigate('Login')} style={styles.button}>
             <Text style={styles.text}>GET STARTED</Text>
           </Pressable>
 
@@ -35,7 +33,7 @@ export default function Signup() {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 
 const styles = StyleSheet.create({
@@ -64,6 +62,8 @@ const styles = StyleSheet.create({
     borderRadius: 2
   }
 });
+
+
 
 
 
