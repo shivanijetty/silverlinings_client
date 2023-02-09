@@ -1,70 +1,60 @@
-import React from 'react';
-import { useState } from 'react';
-import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet } from 'react-native';
-
+import React, { useState } from 'react';
+// import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Login from './Login';
+import Signup from './Signup';
+import Home from './Home';
 
 export default function App() {
-  const [email, setEmail] = useState('Email Address')
-  const [password, setPassword] = useState('Password')
+
+  const Stack = createNativeStackNavigator();
 
   return (
-    <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <View style={{ paddingHorizontal: 25}}>
-
-        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#483C32', marginBottom: 30 }}>LOGIN</Text> 
-
-        <View style={{ alignItems: 'center'}}> 
-          <View style={styles.input}>
-            <TextInput onChange={setEmail} placeholder='Email Address' style={{ paddingVertical: 0 }} keyboardType="email-address" />
-          </View> 
-
-          <View style={styles.input}>
-            <TextInput onChange={setPassword} placeholder='Password' style={{ paddingVertical: 0 }} secureTextEntry={true} />
-          </View>
-
-          <Pressable onPress={() => {}} style={styles.button}>
-            <Text style={styles.text}>SUBMIT</Text>
-          </Pressable>
-
-          <Text style={{ justifyContent: 'center', color: '#483C32', marginTop: 20, marginBottom: 10 }}>Are you new here?</Text>
-
-          <Pressable onPress={() => { }} style={styles.button}>
-            <Text style={styles.text}>SIGNUP</Text>
-          </Pressable>
-        </View>
-
-    </View>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator>
+      <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />      
+      <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />      
+      <Stack.Screen name="Home" component={Home} />      
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
 
-const styles = StyleSheet.create({
-  input: {
-    width: 270,
-    textAlign: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    paddingLeft: 10,
-    paddingBottom: 8,
-    marginBottom: 15
-  },
-  text: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 14,
-    color: '#fff'
-  },
-  button: {
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: '#7a7275',
-    width: 200,
-    // borderWidth: 1,
-    borderRadius: 2
-  }
-});
+// const styles = StyleSheet.create({
+//   input: {
+//     width: 270,
+//     textAlign: 'center',
+//     borderBottomWidth: 1,
+//     borderBottomColor: '#ccc',
+//     paddingLeft: 10,
+//     paddingBottom: 8,
+//     marginBottom: 15
+//   },
+//   text: {
+//     textAlign: 'center',
+//     fontWeight: 'bold',
+//     fontSize: 14,
+//     color: '#fff'
+//   },
+//   button: {
+//     alignItems: 'center',
+//     paddingVertical: 10,
+//     paddingHorizontal: 20,
+//     backgroundColor: '#7a7275',
+//     width: 200,
+//     // borderWidth: 1,
+//     borderRadius: 2
+//   }
+// });
+
+
+
+
+
+
+
 
 
 
