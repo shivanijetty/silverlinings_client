@@ -1,11 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 
-export default function Login({ navigation }) {
+export default function Login({ navigation, user, setUser }) {
   const [email, setEmail] = useState('Email Address')
   const [password, setPassword] = useState('Password')
   
+  
+
+  const handleSubmit = async () => {
+    // e.preventDefault()
+    // console.log('helllooo')
+    let formData = {
+      email: email,
+      password: password
+    }
+    console.log(formData)
+    let req = await fetch("http://10.129.2.201:3000/login", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(formData)
+    })
+    let res = await req.json()
+    if (req.ok) {
+      
+      console.log("Res", res)
+      // Cookies.set('token', res.token)
+      
+      setUser(res.user)
+      
+      navigation.navigate('Home')
+    } else {
+      console.log(res)
+    }
+
+  }
 
   return (
     <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -13,27 +44,32 @@ export default function Login({ navigation }) {
 
         <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#483C32', marginBottom: 30 }}>LOGIN</Text> 
 
-        <View style={{ alignItems: 'center'}}> 
-          <View style={styles.input}>
-            <TextInput onChangeText={(e) => setEmail(e)} placeholder='Email Address' style={{paddingVertical: 0}} keyboardType="email-address" />
-          </View> 
+        <View style={{ alignItems: 'center'}}>
 
-          <View style={styles.input}>
-            <TextInput onChangeText={(e) => setPassword(e)} placeholder='Password' style={{paddingVertical: 0}} secureTextEntry={true} />
+          <View> 
+            <View style={styles.input}>
+              <MaterialIcons name="alternate-email" size={14} color="#949494" />
+              <TextInput onChangeText={setEmail} value={email} placeholder='Email Address' style={styles.textInput} keyboardType="email-address" />
+            </View> 
+
+            <View style={styles.input}>
+              <MaterialIcons name="lock-outline" size={14} color="#949494" />
+              <TextInput onChangeText={setPassword} value={password} placeholder='Password' style={styles.textInput} secureTextEntry={true} />
+            </View>
+
+            <Pressable onPress={() => handleSubmit()} style={styles.button}>
+              <Text style={styles.text}>SUBMIT</Text>
+            </Pressable>
           </View>
 
-          <Pressable onPress={() => navigation.navigate('Home')} style={styles.button}>
-            <Text style={styles.text}>SUBMIT</Text>
-          </Pressable>
-
-          <Text style={{ justifyContent: 'center', color: '#483C32', marginTop: 20, marginBottom: 10 }}>Are you new here?</Text>
+          {/* <Text style={{ justifyContent: 'center', color: '#483C32', marginTop: 20, marginBottom: 10 }}>Are you new here?</Text> */}
 
           <Pressable onPress={() => navigation.navigate('Signup')} style={styles.button}>
             <Text style={styles.text}>SIGNUP</Text>
           </Pressable>
         </View>
 
-    </View>
+      </View>
     </SafeAreaView>
   )
 };
@@ -41,27 +77,35 @@ export default function Login({ navigation }) {
 
 const styles = StyleSheet.create({
   input: {
-    width: 280,
-    textAlign: 'center',
+    width: 275,
+    alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    paddingLeft: 10,
+    paddingLeft: 1,
     paddingBottom: 8,
-    marginBottom: 15
+    marginBottom: 10,
+    flexDirection: 'row',
   },
   text: {
     textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 14,
-    color: '#fff'
+    fontWeight: '500',
+    fontSize: 17,
+    color: '#fff',
+    letterSpacing: 2,
+  },
+  textInput: {
+    paddingVertical: 0, 
+    marginLeft: 2,
+    fontSize: 12
   },
   button: {
     alignItems: 'center',
-    paddingVertical: 10,
+    marginTop: 30,
+    paddingVertical: 15,
     paddingHorizontal: 20,
-    backgroundColor: '#7a7275',
-    width: 230,
+    backgroundColor: '#949494',
+    width: 275,
     // borderWidth: 1,
-    borderRadius: 2
+    borderRadius: 2,
   }
 });

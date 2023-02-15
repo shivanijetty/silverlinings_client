@@ -1,21 +1,60 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './Login';
 import Signup from './Signup';
 import Home from './Home';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function App() {
+  const [user, setUser] = useState(null)
+  const [errorMsg, setErrorMsg] = useState('')
+    
+  useEffect(() => {
+    const loadUser = async () => {
+      let token = await AsyncStorage.getItem('token')
+      if (token) {
+        let req = await fetch("http://localhost:3000/me", {
+          headers: {Authorization: token}
+        })
+        let res = await req.json()
+        if (res.user) setUser(res.user)
+      }
+    }
+    loadUser()
+  }, [])
+
+  
+
+ 
 
   const Stack = createNativeStackNavigator();
+
+  /*
+    { user !== null ? <Home component={Home} options={{ headerShown: false }} logout={logout} />
+      : <Login component={Login} options={{ headerShown: false }} login={setUser}/>
+    }
+  */
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
-      <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />      
-      <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />      
-      <Stack.Screen name="Home" component={Home} />      
+        { user == null ? (
+          <>
+            <Stack.Screen name="Login" options={{ headerShown: false }}>
+              {() => <Login setUser={setUser} />} 
+            </Stack.Screen>           
+            <Stack.Screen name="Signup" options={{ headerShown: false }}>
+              {() => <Signup />}            
+            </Stack.Screen>      
+          </>
+        ) : (
+            <Stack.Screen name="Home" options={{ headerShown: false }}>
+              {() => <Home user={user} setUser={setUser} />} 
+            </Stack.Screen>             
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

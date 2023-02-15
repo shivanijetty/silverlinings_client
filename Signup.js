@@ -1,9 +1,60 @@
 import React, { useState } from 'react';
-import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet } from 'react-native';
+import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
+import { AntDesign, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
-export default function Signup({ navigation }) {
+export default function Signup({ setErrorMsg, navigation }) {
+
   const [email, setEmail] = useState('Email Address')
-  const [password, setPassword] = useState('Password')
+  const [password, setPassword] = useState('Create Password')
+  const [confirmPassword, setConfirmPassword] = useState('Confirm Password')
+  const [username, setUsername] = useState('Create Username')
+
+ 
+  
+  
+
+  // useEffect(() => {
+  //   const loadUser = async () => {
+  //     let token = await AsyncStorage.getItem('token')
+  //     if (token) {
+  //       let req = await fetch("http://localhost:3000/sign", {
+  //         headers: {Authorization: token}
+  //       })
+  //       let res = await req.json()
+  //       if (res.user) setUser(res.user)
+  //     }
+  //   }
+  //   loadUser()
+  // }, [])
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    let data = {
+      username: username,
+      email: email,
+      password: password
+    }
+    let req = await fetch("http://localhost:3000/signup", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    })
+    let res = await req.json()
+    if (req.ok) {
+      if (password !== confirmPassword) {        
+      }
+      setErrorMsg("password must match!")
+    }
+    else {
+      setErrorMsg('')
+    }
+    console.log("Res", res)
+    Cookies.set('token', res.token)
+    setUser(res.user)
+    navigation.navigate('Login')
+  }
   
 
 
@@ -13,19 +64,34 @@ export default function Signup({ navigation }) {
         <Text style={{fontSize: 30, fontWeight: 'bold', color: '#483C32', marginBottom: 30}}>SIGNUP</Text>
 
         <View style={{alignItems: 'center'}}>
-          <View style={styles.input}>
-            <TextInput onChange={setEmail} placeholder='Email Address' style={{paddingVertical: 0}} keyboardType="email-address" />
+
+          <View>
+
+            <View style={styles.input}>
+              <AntDesign name="user" size={14} color="#949494" />
+              <TextInput onChangeText={setUsername} value={username} placeholder='Create Username' style={styles.textInput} keyboardType="text" />
+            </View>
+            <View style={styles.input}>
+              <MaterialIcons name="alternate-email" size={14} color="#949494" />
+              <TextInput onChangeText={setEmail} value={email} placeholder='Enter Email' style={styles.textInput} keyboardType="email-address" />
+            </View>
+
+            <View style={styles.input}>
+              <MaterialIcons name="lock-outline" size={14} color="#949494" />
+              <TextInput onChangeText={setPassword} value={password} placeholder='Create Password' style={styles.textInput} secureTextEntry={true} />
+            </View>
+
+            <View style={styles.input}>
+              <MaterialIcons name="lock-outline" size={14} color="#949494" />
+              <TextInput onChangeText={setConfirmPassword} value={confirmPassword} placeholder='Confirm Password' style={styles.textInput} secureTextEntry={true} />
+            </View>
+
+            <TouchableOpacity style={styles.input}>
+            <SimpleLineIcons name="picture" size={30} color="#949494" />
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.input}>
-            <TextInput onChange={setPassword} placeholder='Create Password' style={{paddingVertical: 0}} secureTextEntry={true} />
-          </View>
-
-          <View style={styles.input}>
-            <TextInput onChange={setPassword} placeholder='Confirm Password' style={{paddingVertical: 0}} secureTextEntry={true} />
-          </View>
-
-          <Pressable onPress={() => navigation.navigate('Login')} style={styles.button}>
+          <Pressable onPress={(e) => handleSubmit(e)} style={styles.button}>
             <Text style={styles.text}>GET STARTED</Text>
           </Pressable>
 
@@ -38,28 +104,36 @@ export default function Signup({ navigation }) {
 
 const styles = StyleSheet.create({
   input: {
-    width: 270,
-    textAlign: 'center',
+    width: 275,
+    alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    paddingLeft: 10,
+    paddingLeft: 1,
     paddingBottom: 8,
-    marginBottom: 15
+    marginBottom: 10,
+    flexDirection: 'row',
   },
   text: {
     textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 14,
-    color: '#fff'
+    fontWeight: '500',
+    fontSize: 17,
+    color: '#fff',
+    letterSpacing: 2,
+  },
+  textInput: {
+    paddingVertical: 0, 
+    marginLeft: 2,
+    fontSize: 12,
   },
   button: {
     alignItems: 'center',
-    paddingVertical: 10,
+    marginTop: 30,
+    paddingVertical: 15,
     paddingHorizontal: 20,
-    backgroundColor: '#7a7275',
-    width: 200,
+    backgroundColor: '#949494',
+    width: 275,
     // borderWidth: 1,
-    borderRadius: 2
+    borderRadius: 2,
   }
 });
 
