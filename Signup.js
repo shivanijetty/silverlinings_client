@@ -11,10 +11,6 @@ export default function Signup({ setErrorMsg, navigation }) {
   const [confirmPassword, setConfirmPassword] = useState('Confirm Password')
   const [username, setUsername] = useState('Create Username')
 
- 
-  
-  
-
   // useEffect(() => {
   //   const loadUser = async () => {
   //     let token = await AsyncStorage.getItem('token')
@@ -29,31 +25,26 @@ export default function Signup({ setErrorMsg, navigation }) {
   //   loadUser()
   // }, [])
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
+    // e.preventDefault()
     let data = {
       username: username,
       email: email,
       password: password
     }
-    let req = await fetch("http://localhost:3000/signup", {
+    let req = await fetch("http://192.168.99.115:3000/signup", {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data)
+    }).catch(err => {
+      console.log(err.message);
     })
     let res = await req.json()
-    if (req.ok) {
-      if (password !== confirmPassword) {        
-      }
-      setErrorMsg("password must match!")
+    if (req.ok) {    
+      console.log("Res", res)
+      setUser(res.user)
+      navigation.navigate('Login')
     }
-    else {
-      setErrorMsg('')
-    }
-    console.log("Res", res)
-    Cookies.set('token', res.token)
-    setUser(res.user)
-    navigation.navigate('Login')
   }
   
 
@@ -69,29 +60,29 @@ export default function Signup({ setErrorMsg, navigation }) {
 
             <View style={styles.input}>
               <AntDesign name="user" size={14} color="#949494" />
-              <TextInput onChangeText={setUsername} value={username} placeholder='Create Username' style={styles.textInput} keyboardType="text" />
+              <TextInput onChangeText={setUsername} /*value={username}*/ placeholder='Create Username' style={styles.textInput} keyboardType="text" />
             </View>
             <View style={styles.input}>
               <MaterialIcons name="alternate-email" size={14} color="#949494" />
-              <TextInput onChangeText={setEmail} value={email} placeholder='Enter Email' style={styles.textInput} keyboardType="email-address" />
+              <TextInput onChangeText={setEmail} /*value={email}*/ placeholder='Enter Email' style={styles.textInput} keyboardType="email-address" />
             </View>
 
             <View style={styles.input}>
               <MaterialIcons name="lock-outline" size={14} color="#949494" />
-              <TextInput onChangeText={setPassword} value={password} placeholder='Create Password' style={styles.textInput} secureTextEntry={true} />
+              <TextInput onChangeText={setPassword} /*value={password}*/ placeholder='Create Password' style={styles.textInput} secureTextEntry={true} />
             </View>
 
             <View style={styles.input}>
               <MaterialIcons name="lock-outline" size={14} color="#949494" />
-              <TextInput onChangeText={setConfirmPassword} value={confirmPassword} placeholder='Confirm Password' style={styles.textInput} secureTextEntry={true} />
+              <TextInput onChangeText={setConfirmPassword} /*value={confirmPassword}*/ placeholder='Confirm Password' style={styles.textInput} secureTextEntry={true} />
             </View>
 
             <TouchableOpacity style={styles.input}>
-            <SimpleLineIcons name="picture" size={30} color="#949494" />
+            <SimpleLineIcons name="picture" size={35} color="#949494" />
             </TouchableOpacity>
           </View>
 
-          <Pressable onPress={(e) => handleSubmit(e)} style={styles.button}>
+          <Pressable onPress={() => handleSubmit()} style={styles.button}>
             <Text style={styles.text}>GET STARTED</Text>
           </Pressable>
 
