@@ -4,11 +4,11 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 
-export default function Login({ navigation, user, setUser }) {
+export default function Login({ setUser }) {
   const [email, setEmail] = useState('Email Address')
-  const [password, setPassword] = useState('Password')
-  
-  
+  const [password, setPassword] = useState('Password') 
+
+  const navigation = useNavigation()  
 
   const handleSubmit = async () => {
     // e.preventDefault()
@@ -18,25 +18,27 @@ export default function Login({ navigation, user, setUser }) {
       password: password
     }
     console.log(formData)
-    let req = await fetch("http://10.129.2.201:3000/login", {
+    let req = await fetch("http://192.168.99.115:3000/login", {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(formData)
+    }).catch(err => {
+      console.log(err.message);
     })
     let res = await req.json()
-    if (req.ok) {
-      
-      console.log("Res", res)
-      // Cookies.set('token', res.token)
-      
-      setUser(res.user)
-      
+    if (req.ok) {      
+      console.log("Res", res)      
+      setUser(res.user)      
       navigation.navigate('Home')
     } else {
       console.log(res)
     }
-
   }
+
+  const navSignup = () => {
+    navigation.navigate('Signup')
+  }
+
 
   return (
     <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -64,7 +66,7 @@ export default function Login({ navigation, user, setUser }) {
 
           {/* <Text style={{ justifyContent: 'center', color: '#483C32', marginTop: 20, marginBottom: 10 }}>Are you new here?</Text> */}
 
-          <Pressable onPress={() => navigation.navigate('Signup')} style={styles.button}>
+          <Pressable onPress={() => navSignup()} style={styles.button}>
             <Text style={styles.text}>SIGNUP</Text>
           </Pressable>
         </View>
