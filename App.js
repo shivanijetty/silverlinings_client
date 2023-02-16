@@ -10,17 +10,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const [user, setUser] = useState(null)
+  const [habits, setHabits] = useState()
   const [errorMsg, setErrorMsg] = useState('')
     
   useEffect(() => {
     const loadUser = async () => {
       let token = await AsyncStorage.getItem('token')
       if (token) {
-        let req = await fetch("http://localhost:3000/me", {
+        let req = await fetch("http://10.129.2.201:3000/me", {
           headers: {Authorization: token}
         })
-        let res = await req.json()
-        if (res.user) setUser(res.user)
+        if (req.ok) {
+          let res = await req.json()
+          setUser(res.user)
+          setHabits(res.habits)
+        }
       }
     }
     loadUser()
@@ -52,7 +56,7 @@ export default function App() {
           </>
         ) : (
             <Stack.Screen name="Home" options={{ headerShown: false }}>
-              {() => <Home user={user} setUser={setUser} />} 
+              {() => <Home user={user} setUser={setUser} setHabits={setHabits} habits={habits} />} 
             </Stack.Screen>             
         )}
       </Stack.Navigator>

@@ -32,7 +32,7 @@ export default function Signup({ setErrorMsg, navigation }) {
       email: email,
       password: password
     }
-    let req = await fetch("http://192.168.99.115:3000/signup", {
+    let req = await fetch("http://10.129.2.201:3000/signup", {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data)
