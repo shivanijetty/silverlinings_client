@@ -5,59 +5,61 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './Login';
 import Signup from './Signup';
 import Home from './Home';
+import Habits from './Habits';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function App() {
-  const [user, setUser] = useState(null)
-  const [habits, setHabits] = useState()
-  const [errorMsg, setErrorMsg] = useState('')
+  const [loggedUser, setLoggedUser] = useState(null)
+  const [userHabits, setUserHabits] = useState()
+  
     
   useEffect(() => {
     const loadUser = async () => {
       let token = await AsyncStorage.getItem('token')
       if (token) {
-        let req = await fetch("http://10.129.2.201:3000/me", {
-          headers: {Authorization: token}
-        })
-        if (req.ok) {
-          let res = await req.json()
-          setUser(res.user)
-          setHabits(res.habits)
-        }
+        const loggedUser = JSON.parse(token)
+        setLoggedUser(loggedUser)
+        console.log(loggedUser)
       }
     }
     loadUser()
   }, [])
-
   
-
- 
+  const fetchUsers = async () => {
+    let req = await fetch("http://10.129.2.201:3000/users")
+    let res = await req.json()               
+    setUserHabits(res)
+  }
+  useEffect (() => {
+    fetchUsers()
+  }, [])
 
   const Stack = createNativeStackNavigator();
 
-  /*
-    { user !== null ? <Home component={Home} options={{ headerShown: false }} logout={logout} />
-      : <Login component={Login} options={{ headerShown: false }} login={setUser}/>
-    }
-  */
+  
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        { user == null ? (
+        { loggedUser == null ? (
           <>
             <Stack.Screen name="Login" options={{ headerShown: false }}>
-              {() => <Login setUser={setUser} />} 
+              {() => <Login setLoggedUser={setLoggedUser} />} 
             </Stack.Screen>           
             <Stack.Screen name="Signup" options={{ headerShown: false }}>
               {() => <Signup />}            
             </Stack.Screen>      
           </>
         ) : (
+          <>
             <Stack.Screen name="Home" options={{ headerShown: false }}>
-              {() => <Home user={user} setUser={setUser} setHabits={setHabits} habits={habits} />} 
-            </Stack.Screen>             
+              {() => <Home loggedUser={loggedUser} setLoggedUser={setLoggedUser} setUserHabits={setUserHabits} userHabits={userHabits} />} 
+            </Stack.Screen>
+            <Stack.Screen name="Habits" >
+              {() => <Habits setUserHabits={setUserHabits} userHabits={userHabits} loggedUser={loggedUser} setLoggedUser={setLoggedUser} />}
+            </Stack.Screen>         
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>

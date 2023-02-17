@@ -4,12 +4,14 @@ import { AntDesign, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
-export default function Signup({ setErrorMsg, navigation }) {
+export default function Signup({ setErrorMsg }) {
 
   const [email, setEmail] = useState('Email Address')
   const [password, setPassword] = useState('Create Password')
   const [confirmPassword, setConfirmPassword] = useState('Confirm Password')
   const [username, setUsername] = useState('Create Username')
+
+  const navigation = useNavigation()
 
   // useEffect(() => {
   //   const loadUser = async () => {
@@ -42,9 +44,13 @@ export default function Signup({ setErrorMsg, navigation }) {
     let res = await req.json()
     if (req.ok) {    
       console.log("Res", res)
-      setUser(res.user)
+      setLoggedUser(res.loggedUser)
       navigation.navigate('Login')
     }
+  }
+
+  const navLogin = () => {
+    navigation.navigate('Login')
   }
   
 
@@ -77,13 +83,16 @@ export default function Signup({ setErrorMsg, navigation }) {
               <TextInput onChangeText={setConfirmPassword} /*value={confirmPassword}*/ placeholder='Confirm Password' style={styles.textInput} secureTextEntry={true} />
             </View>
 
-            <TouchableOpacity style={styles.input}>
+            {/* <TouchableOpacity style={styles.input}>
             <SimpleLineIcons name="picture" size={35} color="#949494" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           <Pressable onPress={() => handleSubmit()} style={styles.button}>
             <Text style={styles.text}>GET STARTED</Text>
+          </Pressable>
+          <Pressable onPress={() => navLogin()} >
+            <Text style={{fontSize: 17, fontWeight: 'bold', color: '#483C32', marginTop: 20}}>BACK TO LOGIN</Text>
           </Pressable>
 
         </View>

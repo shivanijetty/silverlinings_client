@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-export default function Login({ setUser }) {
+export default function Login({ setLoggedUser }) {
   const [email, setEmail] = useState('Email Address')
   const [password, setPassword] = useState('Password') 
 
@@ -12,12 +13,12 @@ export default function Login({ setUser }) {
 
   const handleSubmit = async () => {
     // e.preventDefault()
-    // console.log('helllooo')
+
     let formData = {
       email: email,
       password: password
     }
-    console.log(formData)
+    
     let req = await fetch("http://10.129.2.201:3000/login", {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -26,12 +27,10 @@ export default function Login({ setUser }) {
       console.log(err.message);
     })
     let res = await req.json()
-    if (req.ok) {      
-      console.log("Res", res)      
-      setUser(res.user)      
+    if (req.ok) {     
+      AsyncStorage.setItem('token', JSON.stringify(res.loggedUser))
+      setLoggedUser(res.loggedUser) 
       navigation.navigate('Home')
-    } else {
-      console.log(res)
     }
   }
 
