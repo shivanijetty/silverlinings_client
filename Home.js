@@ -6,29 +6,37 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
 
-export default function Home({ user, setUser, habits, setHabits }) {
+export default function Home({ loggedUser, setLoggedUser, userHabits, setUserHabits }) {
   const navigation = useNavigation()
- 
   const logout = () => {
     AsyncStorage.removeItem('token')
     setUser(null)
     navigation.navigate('Login')
   }
 
+  const navHabits = () => {
+    navigation.navigate('Habits')
+  }
+
+  // const userHabitsFilter = () => console.log(userHabits)
+  // .filter((loggedUser) => {
+  //   return loggedUser.id === user.id
+  
+
   return (
     <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
         
         <View>
-          <Text>{user.username}</Text>
+          <Text>{loggedUser.username}</Text>
           <Pressable onPress={()=> logout()}>
             <Ionicons name="ios-power-outline" size={20} color="black" />
           </Pressable>
         </View>
 
         <View>
-          {
-            habits.map(myhabit => {
+          {/* {
+            userHabitsFilter.map(myhabit => {
               return(
                 <View name={myhabit.image}>
                   <View>
@@ -43,7 +51,10 @@ export default function Home({ user, setUser, habits, setHabits }) {
                 </View>
               )
             })
-          }
+          } */}
+          <Pressable onPress={() => navHabits()} style={styles.button}>
+            <Text style={styles.text}>ADD HABITS</Text>
+          </Pressable>
         </View>
 
       </View>
@@ -61,3 +72,37 @@ export default function Home({ user, setUser, habits, setHabits }) {
 // <MaterialCommunityIcons name="book-open-variant" size={24} color="black" /> (reading)
 // <MaterialIcons name="food-bank" size={24} color="black" />; (eating-out),
 
+const styles = StyleSheet.create({
+  input: {
+    width: 275,
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingLeft: 1,
+    paddingBottom: 8,
+    marginBottom: 10,
+    flexDirection: 'row',
+  },
+  text: {
+    textAlign: 'center',
+    fontWeight: '500',
+    fontSize: 17,
+    color: '#fff',
+    letterSpacing: 2,
+  },
+  textInput: {
+    paddingVertical: 0, 
+    marginLeft: 2,
+    fontSize: 12,
+  },
+  button: {
+    alignItems: 'center',
+    marginTop: 30,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    backgroundColor: '#949494',
+    width: 275,
+    // borderWidth: 1,
+    borderRadius: 2,
+  }
+});
