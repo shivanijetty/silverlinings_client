@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet } from 'react-native';
+import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import icons from './icons';
@@ -13,33 +13,43 @@ export default function Home({ loggedUser, setLoggedUser, userHabits, setUserHab
     setUser(null)
     navigation.navigate('Login')
   }
+  console.log('happy' + loggedUser.id)
+  console.log('happy' + userHabits)
+
 
   const navHabits = () => {
     navigation.navigate('Habits')
   }
 
-  // const userHabitsFilter = () => console.log(userHabits)
-  // .filter((loggedUser) => {
-  //   return loggedUser.id === user.id
+  const userHabitsFilter =
+    userHabits.filter((data) => {
+      console.log(data)
+      return data.id === loggedUser.id
+  })
   
+
+
+  console.log("printing the array", userHabitsFilter)
 
   return (
     <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
         
-        <View>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <Text>{loggedUser.username}</Text>
           <Pressable onPress={()=> logout()}>
-            <Ionicons name="ios-power-outline" size={20} color="black" />
+            <Ionicons name="ios-power-outline" size={25} color="black" style={{marginLeft: 5}} />
           </Pressable>
         </View>
 
         <View>
-          {/* {
-            userHabitsFilter.map(myhabit => {
-              return(
-                <View name={myhabit.image}>
-                  <View>
+          {
+            userHabitsFilter[0]?.habits?.map((habit, i) => {
+              console.log('i like ', habit)
+              return (
+                <View style={styles.container}>
+                  <Image key={i} source={{uri: habit.image}} style={styles.image} />
+                  <View style={styles.icons}>
                     <Pressable>
                       <Ionicons name="add-circle-sharp" size={20} color="black" />
                     </Pressable>
@@ -51,12 +61,13 @@ export default function Home({ loggedUser, setLoggedUser, userHabits, setUserHab
                 </View>
               )
             })
-          } */}
+          }
+        </View>
+
           <Pressable onPress={() => navHabits()} style={styles.button}>
             <Text style={styles.text}>ADD HABITS</Text>
           </Pressable>
-        </View>
-
+  
       </View>
     </SafeAreaView>
   );
@@ -82,6 +93,25 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     marginBottom: 10,
     flexDirection: 'row',
+  },
+  container: {
+    flexDirection: 'row',
+    width: "100%",
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 10,
+    margin: 10,
+  },
+  image: {
+    height: 50,
+    width: 50,
+    // borderBottomLeftRadius: 20,
+    // borderBottomRightRadius: 20,
+  },
+  icons: {
+    flexDirection: 'column', 
+    marginLeft: 5, 
+    justifyContent: 'space-between'
   },
   text: {
     textAlign: 'center',
