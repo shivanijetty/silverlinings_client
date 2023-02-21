@@ -30,12 +30,11 @@ export default function Habits({userHabits, setUserHabits, loggedUser, setLogged
       {
         allHabits.map((habit) => {
           return(
-            <View style={{width: "100%", flexDirection: 'column'}}>
-              <View >
-                <Pressable style={styles.icons}>
-                  <Image source={{uri: habit.image}} style={styles.image}>
+            <View>
+              <View style={styles.icons}>
+                <Pressable>
+                  <Image source={{uri: habit.image}} style={styles.image}/>
                   {/* <Ionicons name="add-circle-sharp" size={30} color="black" /> */}
-                  </Image>
                 </Pressable>
               </View>
             </View>
@@ -50,16 +49,14 @@ export default function Habits({userHabits, setUserHabits, loggedUser, setLogged
 const styles = StyleSheet.create({
   icons: {
     marginLeft: 1,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
     paddingBottom: 3,
     flexDirection: 'column',
-    marginLeft: '10%'
-   
-    // flexWrap: 'wrap',
-    
-
-      
+    // marginLeft: '10%',
+    // width: "100%",
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 5,
+    margin: 5,      
   },
   image: {
     height: 50,
