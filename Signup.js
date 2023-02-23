@@ -16,15 +16,15 @@ export default function Signup({ setErrorMsg }) {
   // useEffect(() => {
   //   const loadUser = async () => {
   //     let token = await AsyncStorage.getItem('token')
-  //     if (token) {
-  //       let req = await fetch("http://localhost:3000/sign", {
-  //         headers: {Authorization: token}
-  //       })
-  //       let res = await req.json()
-  //       if (res.user) setUser(res.user)
-  //     }
-  //   }
-  //   loadUser()
+    //   if (token) {
+    //     let req = await fetch("http://localhost:3000/sign", {
+    //       headers: {Authorization: token}
+    //     })
+    //     let res = await req.json()
+    //     if (res.user) setUser(res.user)
+    //   }
+    // }
+    // loadUser()
   // }, [])
 
   const handleSubmit = async () => {
