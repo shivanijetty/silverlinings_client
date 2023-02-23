@@ -4,6 +4,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// campus hostname = http://10.129.2.201:3000
+// home hostname = http://192.168.99.115:3000
 
 export default function Login({ setLoggedUser }) {
   const [email, setEmail] = useState('Email Address')
@@ -19,7 +21,7 @@ export default function Login({ setLoggedUser }) {
       password: password
     }
     
-    let req = await fetch("http://10.129.2.201:3000/login", {
+    let req = await fetch("http://192.168.99.115:3000/login", {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(formData)
@@ -27,9 +29,10 @@ export default function Login({ setLoggedUser }) {
       console.log(err.message);
     })
     let res = await req.json()
+    console.log('RESPONSE ', res)
     if (req.ok) {     
-      AsyncStorage.setItem('token', JSON.stringify(res.loggedUser))
-      setLoggedUser(res.loggedUser) 
+      AsyncStorage.setItem('token', JSON.stringify(res.user))
+      setLoggedUser(res.user) 
       navigation.navigate('Home')
     }
   }

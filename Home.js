@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,28 +8,38 @@ import { Ionicons } from '@expo/vector-icons';
 
 export default function Home({ loggedUser, setLoggedUser, userHabits, setUserHabits }) {
   const navigation = useNavigation()
-  const logout = () => {
-    AsyncStorage.removeItem('token')
-    setUser(null)
-    navigation.navigate('Login')
-  }
-  console.log('happy' + loggedUser.id)
-  console.log('happy' + userHabits)
-
-
+  
   const navHabits = () => {
     navigation.navigate('Habits')
   }
 
-  const userHabitsFilter =
-    userHabits.filter((data) => {
-      console.log(data)
-      return data.id === loggedUser.id
-  })
+  useEffect(() => {
+    const request = async () => {
+      let req = await fetch(`http://192.168.99.115:3000/users/${loggedUser.id}/habits`)
+      let res = await req.json()
+
+      setUserHabits(res)
+    }
+    request()
+  }, [])
   
+  // console.log('I am ', loggedUser)
+  // console.log(userHabits)
+
+  // const userHabitsFilter =
+  // userHabits.filter((data) => {
+  //   // console.log(data)
+  //   return data.id === loggedUser.id
+  // })
+  // console.log("printing the array", userHabitsFilter)
+  
+  const logout = () => {
+    AsyncStorage.removeItem('token')
+    setLoggedUser(null)
+    navigation.navigate('Login')
+  }
 
 
-  console.log("printing the array", userHabitsFilter)
 
   return (
     <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -44,8 +54,7 @@ export default function Home({ loggedUser, setLoggedUser, userHabits, setUserHab
 
         <View>
           {
-            userHabitsFilter[0]?.habits?.map((habit, i) => {
-              console.log('i like ', habit)
+            userHabits.map((habit, i) => {
               return (
                 <View style={styles.container}>
                   <Image key={i} source={{uri: habit.image}} style={styles.image} />

@@ -12,17 +12,41 @@ export default function Habits({userHabits, setUserHabits, loggedUser, setLogged
 
   useEffect(() => {
     const loadAllHabits = async () => {
-      let req = await fetch("http://10.129.2.201:3000/habits")
+      let req = await fetch("http://192.168.99.115:3000/habits")
       let res = await req.json()
       setAllHabits(res)
     }
     loadAllHabits()
   }, [])
 
-  const addHabit = (habit) => {
-    if (userHabits.includes(habit)) return;
-    setUserHabits([...userHabits, habit])
+  
+
+  const handlePress = async (habitId) => {
+
+    const keyHabit = allHabits.find((habit, i) => {
+      return habit.id === habitId      
+    })    
+
+    let habitData = {
+      user_id: loggedUser.id,
+      habit_id: keyHabit
+    }
+    let req = await fetch("http://192.168.99.115:3000/activities", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(habitData)
+    })
+    let res = await req.json()
+    if (req.ok) {
+      setUserHabits(res)
+      console.log(userHabits," new habit")
+    }
   }
+
+  // const addHabit = (habit) => {
+  //   if (userHabits.includes(habit)) return;
+  //   setUserHabits([...userHabits, habit])
+  // }
 
 
   return(
@@ -32,7 +56,7 @@ export default function Habits({userHabits, setUserHabits, loggedUser, setLogged
           return(
             <View>
               <View style={styles.icons}>
-                <Pressable>
+                <Pressable onPress={() => { handlePress(habit.id) }}>
                   <Image source={{uri: habit.image}} style={styles.image}/>
                   {/* <Ionicons name="add-circle-sharp" size={30} color="black" /> */}
                 </Pressable>

@@ -16,24 +16,37 @@ export default function App() {
     
   useEffect(() => {
     const loadUser = async () => {
-      let token = await AsyncStorage.getItem('token')
+      let token = await AsyncStorage.getItem('token')      
       if (token) {
         setLoggedUser(JSON.parse(token))
-        // console.log(loggedUser)
+        let req = await fetch("http://192.168.99.115:3000/me", {
+          method: 'GET',
+          headers: {
+            // Authorization: token
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'Token': token
+          }
+        })
+        let res = await req.json()
+        if (res.user) {
+         setLoggedUser(res.user)
+        }
       }
     }
     loadUser()
   }, [])
+
   
-  const fetchUsers = async () => {
-    let req = await fetch("http://10.129.2.201:3000/users")
-    let res = await req.json()               
-    setUserHabits(res)
-    console.log(userHabits," from app.js")
-  }
-  useEffect (() => {
-    fetchUsers()
-  }, [])
+  
+  // const fetchUsers = async () => {
+  //   let req = await fetch("http://10.129.2.201:3000/users")
+  //   let res = await req.json()               
+    
+  // }
+  // useEffect (() => {
+  //   fetchUsers()
+  // }, [])
 
   const Stack = createNativeStackNavigator();
 
