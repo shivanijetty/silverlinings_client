@@ -4,10 +4,12 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function Habits({userHabits, setUserHabits, loggedUser, setLoggedUser}) {
-  const navigation = useNavigation()
+export default function Enroll({userHabits, setUserHabits, loggedUser, setLoggedUser}) {
 
+  const navigation = useNavigation()
   const [allHabits, setAllHabits] = useState([])
+  const [progress, setProgress] = useState(0)
+
   
 
   useEffect(() => {
@@ -18,20 +20,26 @@ export default function Habits({userHabits, setUserHabits, loggedUser, setLogged
     }
     loadAllHabits()
   }, [])
-
   
 
-  const handlePress = async (habitId) => {
+  const handlePress = async (enrolledHabitParams) => {
 
-    const keyHabit = allHabits.find((habit, i) => {
-      return habit.id === habitId      
-    })    
+    const habitId = allHabits.find((habit) => {
+      return habit.id === enrolledHabitParams      
+    })
+    
+    const habitImage = allHabits.find((habit) => {
+      return habit.image === enrolledHabitParams      
+    })
 
     let habitData = {
       user_id: loggedUser.id,
-      habit_id: keyHabit
+      habit_id: habitId,
+      progress: setProgress,
+      habit_image: habitImage
     }
-    let req = await fetch("http://192.168.99.115:3000/activities", {
+
+    let req = await fetch("http://192.168.99.115:3000/enroll", {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(habitData)
@@ -43,20 +51,17 @@ export default function Habits({userHabits, setUserHabits, loggedUser, setLogged
     }
   }
 
-  // const addHabit = (habit) => {
-  //   if (userHabits.includes(habit)) return;
-  //   setUserHabits([...userHabits, habit])
-  // }
+
 
 
   return(
-    <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+    <SafeAreaView style={{ backgroundColor: '#f7f4ea', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       {
         allHabits.map((habit) => {
           return(
             <View>
               <View style={styles.icons}>
-                <Pressable onPress={() => { handlePress(habit.id) }}>
+                <Pressable onPress={() => { handlePress() }}>
                   <Image source={{uri: habit.image}} style={styles.image}/>
                   {/* <Ionicons name="add-circle-sharp" size={30} color="black" /> */}
                 </Pressable>
@@ -72,6 +77,7 @@ export default function Habits({userHabits, setUserHabits, loggedUser, setLogged
 
 const styles = StyleSheet.create({
   icons: {
+    backgroundColor: '#c0b9dd',
     marginLeft: 1,
     paddingBottom: 3,
     flexDirection: 'column',
@@ -83,6 +89,7 @@ const styles = StyleSheet.create({
     margin: 5,      
   },
   image: {
+    backgroundColor: '#c0b9dd',
     height: 50,
     width: 50
   }
