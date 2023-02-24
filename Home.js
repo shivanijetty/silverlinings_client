@@ -6,32 +6,53 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
 
-export default function Home({ loggedUser, setLoggedUser, userHabits, setUserHabits }) {
+export default function Enroll({ loggedUser, setLoggedUser, userHabits, setUserHabits }) {
   const navigation = useNavigation()
   
-  const navHabits = () => {
-    navigation.navigate('Habits')
+  const navEnroll = () => {
+    navigation.navigate('Enroll')
   }
 
   useEffect(() => {
     const request = async () => {
-      let req = await fetch(`http://192.168.99.115:3000/users/${loggedUser.id}/habits`)
+      let req = await fetch(`http://192.168.99.115:3000/users/${loggedUser.id}/activities`)
       let res = await req.json()
 
       setUserHabits(res)
     }
     request()
   }, [])
-  
-  // console.log('I am ', loggedUser)
-  // console.log(userHabits)
 
-  // const userHabitsFilter =
-  // userHabits.filter((data) => {
-  //   // console.log(data)
-  //   return data.id === loggedUser.id
-  // })
-  // console.log("printing the array", userHabitsFilter)
+  const trackProgress = async () => {
+    let req = await fetch(`http://192.168.99.115:3000/users/${loggedUser.id}/activities`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        progress: setUserHabits.progress + 1
+      })
+    })
+    if (req.ok) {
+      let res = await req.json()
+      console.log(res)
+      setUserHabits(res)
+    }
+  }
+  const giveup = async () => {
+    let req = await fetch(`http://192.168.99.115:3000/users/${loggedUser.id}/activities`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    if (req.ok) {
+      let res = await req.json()
+      console.log(res)
+      setUserHabits(res)
+    }
+  }
+  
   
   const logout = () => {
     AsyncStorage.removeItem('token')
@@ -42,7 +63,7 @@ export default function Home({ loggedUser, setLoggedUser, userHabits, setUserHab
 
 
   return (
-    <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+    <SafeAreaView style={{backgroundColor: '#efe6dd', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
         
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -59,12 +80,13 @@ export default function Home({ loggedUser, setLoggedUser, userHabits, setUserHab
                 <View style={styles.container}>
                   <Image key={i} source={{uri: habit.image}} style={styles.image} />
                   <View style={styles.icons}>
-                    <Pressable>
-                      <Ionicons name="add-circle-sharp" size={20} color="black" />
+                    <Pressable onPress={() => trackProgress()}>
+                      <Ionicons name="add-circle-sharp" size={20} color="#80b918" />
+                      <Text>{habit.progress}</Text>
                     </Pressable>
 
-                    <Pressable>
-                      <Ionicons name="remove-circle-sharp" size={20} color="black" />
+                    <Pressable onPress={() => giveup()}>
+                      <Ionicons name="remove-circle-sharp" size={20} color="#ba181b" />
                     </Pressable>
                   </View>
                 </View>
@@ -73,7 +95,7 @@ export default function Home({ loggedUser, setLoggedUser, userHabits, setUserHab
           }
         </View>
 
-          <Pressable onPress={() => navHabits()} style={styles.button}>
+          <Pressable onPress={() => navEnroll()} style={styles.button}>
             <Text style={styles.text}>ADD HABITS</Text>
           </Pressable>
   
@@ -104,20 +126,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   container: {
+    backgroundColor: '#f7ede2',
     flexDirection: 'row',
     width: "100%",
     borderWidth: 1,
     borderColor: 'black',
-    padding: 10,
-    margin: 10,
+    padding: 5,
+    margin: 10
   },
   image: {
+    backgroundColor: '#f7ede2',
     height: 50,
     width: 50,
     // borderBottomLeftRadius: 20,
     // borderBottomRightRadius: 20,
   },
   icons: {
+    backgroundColor: '#f7ede2',
     flexDirection: 'column', 
     marginLeft: 5, 
     justifyContent: 'space-between'
@@ -126,7 +151,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '500',
     fontSize: 17,
-    color: '#fff',
+    color: '#000',
     letterSpacing: 2,
   },
   textInput: {
@@ -137,11 +162,12 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     marginTop: 30,
-    paddingVertical: 15,
+    paddingVertical: 13,
     paddingHorizontal: 20,
-    backgroundColor: '#949494',
+    backgroundColor: '#ffbf69',
     width: 275,
-    // borderWidth: 1,
-    borderRadius: 2,
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 6,
   }
 });

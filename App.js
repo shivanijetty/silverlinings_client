@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-// import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './Login';
 import Signup from './Signup';
 import Home from './Home';
-import Habits from './Habits';
+import Enroll from './Enroll';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -38,19 +37,8 @@ export default function App() {
   }, [])
 
   
-  
-  // const fetchUsers = async () => {
-  //   let req = await fetch("http://10.129.2.201:3000/users")
-  //   let res = await req.json()               
-    
-  // }
-  // useEffect (() => {
-  //   fetchUsers()
-  // }, [])
 
-  const Stack = createNativeStackNavigator();
-
-  
+  const Stack = createNativeStackNavigator();  
 
   return (
     <NavigationContainer>
@@ -69,8 +57,8 @@ export default function App() {
             <Stack.Screen name="Home" options={{ headerShown: false }}>
               {() => <Home loggedUser={loggedUser} setLoggedUser={setLoggedUser} setUserHabits={setUserHabits} userHabits={userHabits} />} 
             </Stack.Screen>
-            <Stack.Screen name="Habits" >
-              {() => <Habits setUserHabits={setUserHabits} userHabits={userHabits} loggedUser={loggedUser} setLoggedUser={setLoggedUser} />}
+            <Stack.Screen name="Enroll" >
+              {() => <Enroll setUserHabits={setUserHabits} userHabits={userHabits} loggedUser={loggedUser} setLoggedUser={setLoggedUser} />}
             </Stack.Screen>         
           </>
         )}
