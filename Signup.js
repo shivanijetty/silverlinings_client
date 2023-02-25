@@ -6,10 +6,9 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function Signup({ setErrorMsg }) {
 
-  const [email, setEmail] = useState('Email Address')
-  const [password, setPassword] = useState('Create Password')
-  const [confirmPassword, setConfirmPassword] = useState('Confirm Password')
-  const [username, setUsername] = useState('Create Username')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('')
 
   const navigation = useNavigation()
 
@@ -44,7 +43,6 @@ export default function Signup({ setErrorMsg }) {
     let res = await req.json()
     if (req.ok) {    
       console.log("Res", res)
-      setLoggedUser(res.loggedUser)
       navigation.navigate('Login')
     }
   }
@@ -76,11 +74,6 @@ export default function Signup({ setErrorMsg }) {
             <View style={styles.input}>
               <MaterialIcons name="lock-outline" size={14} color="#949494" />
               <TextInput onChangeText={setPassword} /*value={password}*/ placeholder='Create Password' style={styles.textInput} secureTextEntry={true} />
-            </View>
-
-            <View style={styles.input}>
-              <MaterialIcons name="lock-outline" size={14} color="#949494" />
-              <TextInput onChangeText={setConfirmPassword} /*value={confirmPassword}*/ placeholder='Confirm Password' style={styles.textInput} secureTextEntry={true} />
             </View>
 
             {/* <TouchableOpacity style={styles.input}>

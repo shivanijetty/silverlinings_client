@@ -14,7 +14,7 @@ export default function Enroll({userHabits, setUserHabits, loggedUser, setLogged
 
   useEffect(() => {
     const loadAllHabits = async () => {
-      let req = await fetch("http://192.168.99.115:3000/habits")
+      let req = await fetch("http://10.129.2.201:3000/habits")
       let res = await req.json()
       setAllHabits(res)
     }
@@ -39,7 +39,7 @@ export default function Enroll({userHabits, setUserHabits, loggedUser, setLogged
       habit_image: habitImage
     }
 
-    let req = await fetch("http://192.168.99.115:3000/enroll", {
+    let req = await fetch("http://10.129.2.201:3000/enroll", {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(habitData)

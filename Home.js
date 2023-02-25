@@ -15,7 +15,7 @@ export default function Enroll({ loggedUser, setLoggedUser, userHabits, setUserH
 
   useEffect(() => {
     const request = async () => {
-      let req = await fetch(`http://192.168.99.115:3000/users/${loggedUser.id}/activities`)
+      let req = await fetch(`http://10.129.2.201:3000/users/${loggedUser.id}/activities`)
       let res = await req.json()
 
       setUserHabits(res)
@@ -23,8 +23,9 @@ export default function Enroll({ loggedUser, setLoggedUser, userHabits, setUserH
     request()
   }, [])
 
-  const trackProgress = async () => {
-    let req = await fetch(`http://192.168.99.115:3000/users/${loggedUser.id}/activities`, {
+  const trackProgress = async (activityId) => {
+    
+    let req = await fetch(`http://10.129.2.201:3000/users/${loggedUser.id}/activities/${activityId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
@@ -36,11 +37,19 @@ export default function Enroll({ loggedUser, setLoggedUser, userHabits, setUserH
     if (req.ok) {
       let res = await req.json()
       console.log(res)
-      setUserHabits(res)
+      const new_array = userHabits.map((habit) => {
+        if (habit.id === res.id) {
+          return {...habit, progress: res.progress}
+        }
+        return habit
+      })
+      setUserHabits(new_array)
     }
   }
-  const giveup = async () => {
-    let req = await fetch(`http://192.168.99.115:3000/users/${loggedUser.id}/activities`, {
+
+  const giveup = async (activityId) => {
+    console.log(activityId)
+    let req = await fetch(`http://10.129.2.201:3000/users/${loggedUser.id}/activities/${activityId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -48,8 +57,10 @@ export default function Enroll({ loggedUser, setLoggedUser, userHabits, setUserH
     })
     if (req.ok) {
       let res = await req.json()
-      console.log(res)
-      setUserHabits(res)
+      const deleted = userHabits.filter((habit) => {
+        return habit.id !== activityId
+      }) 
+      setUserHabits(deleted)     
     }
   }
   
@@ -75,17 +86,17 @@ export default function Enroll({ loggedUser, setLoggedUser, userHabits, setUserH
 
         <View>
           {
-            userHabits.map((habit, i) => {
+            userHabits.map((habit) => {
               return (
                 <View style={styles.container}>
-                  <Image key={i} source={{uri: habit.image}} style={styles.image} />
+                  <Image source={{uri: habit.habit_image}} style={styles.image} />
                   <View style={styles.icons}>
-                    <Pressable onPress={() => trackProgress()}>
+                    <Pressable onPress={() => trackProgress(habit.id)}>
                       <Ionicons name="add-circle-sharp" size={20} color="#80b918" />
                       <Text>{habit.progress}</Text>
                     </Pressable>
 
-                    <Pressable onPress={() => giveup()}>
+                    <Pressable onPress={() => giveup(habit.id)}>
                       <Ionicons name="remove-circle-sharp" size={20} color="#ba181b" />
                     </Pressable>
                   </View>

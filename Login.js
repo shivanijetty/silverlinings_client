@@ -8,8 +8,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // home hostname = http://192.168.99.115:3000
 
 export default function Login({ setLoggedUser }) {
-  const [email, setEmail] = useState('Email Address')
-  const [password, setPassword] = useState('Password') 
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('') 
 
   const navigation = useNavigation()  
 
@@ -21,7 +21,7 @@ export default function Login({ setLoggedUser }) {
       password: password
     }
     
-    let req = await fetch("http://192.168.99.115:3000/login", {
+    let req = await fetch("http://10.129.2.201:3000/login", {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(formData)
