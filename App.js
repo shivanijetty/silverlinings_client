@@ -18,7 +18,7 @@ export default function App() {
       let token = await AsyncStorage.getItem('token')      
       if (token) {
         setLoggedUser(JSON.parse(token))
-        let req = await fetch("http://192.168.99.115:3000/me", {
+        let req = await fetch("http://10.129.2.201:3000/me", {
           method: 'GET',
           headers: {
             // Authorization: token
