@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet, Image } from 'react-native';
+import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet, Image, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
@@ -35,7 +35,7 @@ export default function Enroll({userHabits, setUserHabits, loggedUser, setLogged
     let habitData = {
       user_id: loggedUser.id,
       habit_id: habitId,
-      progress: setProgress,
+      progress: progress,
       habit_image: habitImage
     }
 
@@ -48,7 +48,19 @@ export default function Enroll({userHabits, setUserHabits, loggedUser, setLogged
     if (req.ok) {
       setUserHabits(res)
       console.log(userHabits," new habit")
+      const added = allHabits.filter((habit) => {
+        return allHabits.id !== habit
+      }) 
+      setUserHabits(added) 
     }
+  }
+
+  const renderHabitIcons = ({ item }) => {
+    return (
+      <Pressable style={styles.icons} onPress={() => { handlePress(enrolledHabitParams) }}>
+      <Image source={{uri: item.image}} style={styles.image}/>
+      </Pressable>
+    )
   }
 
 
@@ -56,20 +68,12 @@ export default function Enroll({userHabits, setUserHabits, loggedUser, setLogged
 
   return(
     <SafeAreaView style={{ backgroundColor: '#f7f4ea', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      {
-        allHabits.map((habit) => {
-          return(
-            <View>
-              <View style={styles.icons}>
-                <Pressable onPress={() => { handlePress() }}>
-                  <Image source={{uri: habit.image}} style={styles.image}/>
-                  {/* <Ionicons name="add-circle-sharp" size={30} color="black" /> */}
-                </Pressable>
-              </View>
-            </View>
-          )
-        })
-      }
+        <FlatList
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          data={allHabits}
+          renderItem={renderHabitIcons}          
+        />
     </SafeAreaView>
   )
 }

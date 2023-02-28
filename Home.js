@@ -92,12 +92,12 @@ export default function Enroll({ loggedUser, setLoggedUser, userHabits, setUserH
                   <Image source={{uri: habit.habit_image}} style={styles.image} />
                   <View style={styles.icons}>
                     <Pressable onPress={() => trackProgress(habit.id)}>
-                      <Ionicons name="add-circle-sharp" size={20} color="#80b918" />
                       <Text>{habit.progress}</Text>
+                      <Ionicons name="add-circle-sharp" size={20} color="#80b918" />
                     </Pressable>
 
                     <Pressable onPress={() => giveup(habit.id)}>
-                      <Ionicons name="remove-circle-sharp" size={20} color="#ba181b" />
+                      <Ionicons name="close-circle-sharp" size={20} color="#ba181b" />
                     </Pressable>
                   </View>
                 </View>
