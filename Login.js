@@ -29,7 +29,7 @@ export default function Login({ setLoggedUser }) {
       console.log(err.message);
     })
     let res = await req.json()
-    console.log('RESPONSE ', res)
+    // console.log('RESPONSE ', res)
     if (req.ok) {     
       AsyncStorage.setItem('token', JSON.stringify(res.user))
       setLoggedUser(res.user) 

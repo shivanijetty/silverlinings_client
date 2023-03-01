@@ -41,7 +41,7 @@ export default function Signup() {
     })
     let res = await req.json()
     if (req.ok) {    
-      console.log("Res", res)
+      // console.log("Res", res)
       navigation.navigate('Login')
     }
   }

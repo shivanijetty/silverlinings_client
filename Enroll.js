@@ -13,7 +13,7 @@ export default function Enroll({userHabits, setUserHabits, loggedUser, setLogged
   
 
   useEffect(() => {
-    const loadAllHabits = async () => {
+    const loadAllHabits = async() => {
       let req = await fetch("http://10.129.2.201:3000/habits")
       let res = await req.json()
       setAllHabits(res)
@@ -22,21 +22,26 @@ export default function Enroll({userHabits, setUserHabits, loggedUser, setLogged
   }, [])
   
 
-  const handlePress = async (enrolledHabitParams) => {
+  const handlePress = async(item) => {
+    console.log('clicked!', item)
+    console.log(item.id)
+    console.log(item.image)
 
-    const habitId = allHabits.find((habit) => {
-      return habit.id === enrolledHabitParams      
-    })
+    // const habit = allHabits.(() => {
+    //   // console.log('habit id', item)  
+    //   return habit.id === item   
+    // })
     
-    const habitImage = allHabits.find((habit) => {
-      return habit.image === enrolledHabitParams      
-    })
+    // const habitImage = allHabits.find((habit) => {
+    //   // console.log('image', item)
+    //   return habit.image === item  
+    // })
 
     let habitData = {
       user_id: loggedUser.id,
-      habit_id: habitId,
+      habit_id: item.id,
       progress: progress,
-      habit_image: habitImage
+      habit_image: item.image
     }
 
     let req = await fetch("http://10.129.2.201:3000/enroll", {
@@ -47,7 +52,7 @@ export default function Enroll({userHabits, setUserHabits, loggedUser, setLogged
     let res = await req.json()
     if (req.ok) {
       setUserHabits(res)
-      console.log(userHabits," new habit")
+      // console.log(userHabits," new habit")
       const added = allHabits.filter((habit) => {
         return allHabits.id !== habit
       }) 
@@ -57,7 +62,7 @@ export default function Enroll({userHabits, setUserHabits, loggedUser, setLogged
 
   const renderHabitIcons = ({ item }) => {
     return (
-      <Pressable style={styles.icons} onPress={() => { handlePress(enrolledHabitParams) }}>
+      <Pressable style={styles.icons} onPress={() => { handlePress(item) }}>
       <Image source={{uri: item.image}} style={styles.image}/>
       </Pressable>
     )
@@ -83,6 +88,7 @@ const styles = StyleSheet.create({
   icons: {
     backgroundColor: '#c0b9dd',
     marginLeft: 1,
+    
     paddingBottom: 3,
     flexDirection: 'column',
     // marginLeft: '10%',
@@ -90,11 +96,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     padding: 5,
-    margin: 5,      
+    margin: 20,      
   },
   image: {
     backgroundColor: '#c0b9dd',
-    height: 50,
-    width: 50
+    height: 75,
+    width: 75
   }
 })
