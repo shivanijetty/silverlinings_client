@@ -4,7 +4,7 @@ import { AntDesign, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
-export default function Signup({ setErrorMsg }) {
+export default function Signup() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -27,7 +27,6 @@ export default function Signup({ setErrorMsg }) {
   // }, [])
 
   const handleSubmit = async () => {
-    // e.preventDefault()
     let data = {
       username: username,
       email: email,
@@ -42,7 +41,7 @@ export default function Signup({ setErrorMsg }) {
     })
     let res = await req.json()
     if (req.ok) {    
-      console.log("Res", res)
+      // console.log("Res", res)
       navigation.navigate('Login')
     }
   }

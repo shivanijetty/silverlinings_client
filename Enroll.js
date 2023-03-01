@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet, Image } from 'react-native';
+import { Text, View, SafeAreaView, TextInput, Pressable, StyleSheet, Image, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,7 +13,7 @@ export default function Enroll({userHabits, setUserHabits, loggedUser, setLogged
   
 
   useEffect(() => {
-    const loadAllHabits = async () => {
+    const loadAllHabits = async() => {
       let req = await fetch("http://10.129.2.201:3000/habits")
       let res = await req.json()
       setAllHabits(res)
@@ -22,21 +22,26 @@ export default function Enroll({userHabits, setUserHabits, loggedUser, setLogged
   }, [])
   
 
-  const handlePress = async (enrolledHabitParams) => {
+  const handlePress = async(item) => {
+    console.log('clicked!', item)
+    console.log(item.id)
+    console.log(item.image)
 
-    const habitId = allHabits.find((habit) => {
-      return habit.id === enrolledHabitParams      
-    })
+    // const habit = allHabits.(() => {
+    //   // console.log('habit id', item)  
+    //   return habit.id === item   
+    // })
     
-    const habitImage = allHabits.find((habit) => {
-      return habit.image === enrolledHabitParams      
-    })
+    // const habitImage = allHabits.find((habit) => {
+    //   // console.log('image', item)
+    //   return habit.image === item  
+    // })
 
     let habitData = {
       user_id: loggedUser.id,
-      habit_id: habitId,
-      progress: setProgress,
-      habit_image: habitImage
+      habit_id: item.id,
+      progress: progress,
+      habit_image: item.image
     }
 
     let req = await fetch("http://10.129.2.201:3000/enroll", {
@@ -47,8 +52,20 @@ export default function Enroll({userHabits, setUserHabits, loggedUser, setLogged
     let res = await req.json()
     if (req.ok) {
       setUserHabits(res)
-      console.log(userHabits," new habit")
+      // console.log(userHabits," new habit")
+      const added = allHabits.filter((habit) => {
+        return allHabits.id !== habit
+      }) 
+      setUserHabits(added) 
     }
+  }
+
+  const renderHabitIcons = ({ item }) => {
+    return (
+      <Pressable style={styles.icons} onPress={() => { handlePress(item) }}>
+      <Image source={{uri: item.image}} style={styles.image}/>
+      </Pressable>
+    )
   }
 
 
@@ -56,20 +73,12 @@ export default function Enroll({userHabits, setUserHabits, loggedUser, setLogged
 
   return(
     <SafeAreaView style={{ backgroundColor: '#f7f4ea', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      {
-        allHabits.map((habit) => {
-          return(
-            <View>
-              <View style={styles.icons}>
-                <Pressable onPress={() => { handlePress() }}>
-                  <Image source={{uri: habit.image}} style={styles.image}/>
-                  {/* <Ionicons name="add-circle-sharp" size={30} color="black" /> */}
-                </Pressable>
-              </View>
-            </View>
-          )
-        })
-      }
+        <FlatList
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          data={allHabits}
+          renderItem={renderHabitIcons}          
+        />
     </SafeAreaView>
   )
 }
@@ -79,6 +88,7 @@ const styles = StyleSheet.create({
   icons: {
     backgroundColor: '#c0b9dd',
     marginLeft: 1,
+    
     paddingBottom: 3,
     flexDirection: 'column',
     // marginLeft: '10%',
@@ -86,11 +96,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     padding: 5,
-    margin: 5,      
+    margin: 20,      
   },
   image: {
     backgroundColor: '#c0b9dd',
-    height: 50,
-    width: 50
+    height: 75,
+    width: 75
   }
 })

@@ -36,7 +36,7 @@ export default function Enroll({ loggedUser, setLoggedUser, userHabits, setUserH
     })
     if (req.ok) {
       let res = await req.json()
-      console.log(res)
+      // console.log(res)
       const new_array = userHabits.map((habit) => {
         if (habit.id === res.id) {
           return {...habit, progress: res.progress}
@@ -48,7 +48,7 @@ export default function Enroll({ loggedUser, setLoggedUser, userHabits, setUserH
   }
 
   const giveup = async (activityId) => {
-    console.log(activityId)
+    // console.log(activityId)
     let req = await fetch(`http://10.129.2.201:3000/users/${loggedUser.id}/activities/${activityId}`, {
       method: 'DELETE',
       headers: {
@@ -92,12 +92,12 @@ export default function Enroll({ loggedUser, setLoggedUser, userHabits, setUserH
                   <Image source={{uri: habit.habit_image}} style={styles.image} />
                   <View style={styles.icons}>
                     <Pressable onPress={() => trackProgress(habit.id)}>
+                      <Text style={{marginLeft: 5, fontWeight: 'bold'}}>{habit.progress}</Text>
                       <Ionicons name="add-circle-sharp" size={20} color="#80b918" />
-                      <Text>{habit.progress}</Text>
                     </Pressable>
 
                     <Pressable onPress={() => giveup(habit.id)}>
-                      <Ionicons name="remove-circle-sharp" size={20} color="#ba181b" />
+                      <Ionicons name="close-circle-sharp" size={20} color="#ba181b" />
                     </Pressable>
                   </View>
                 </View>
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 50,
     paddingVertical: 13,
     paddingHorizontal: 20,
     backgroundColor: '#ffbf69',
