@@ -27,16 +27,6 @@ export default function Enroll({userHabits, setUserHabits, loggedUser, setLogged
     console.log(item.id)
     console.log(item.image)
 
-    // const habit = allHabits.(() => {
-    //   // console.log('habit id', item)  
-    //   return habit.id === item   
-    // })
-    
-    // const habitImage = allHabits.find((habit) => {
-    //   // console.log('image', item)
-    //   return habit.image === item  
-    // })
-
     let habitData = {
       user_id: loggedUser.id,
       habit_id: item.id,
@@ -51,12 +41,11 @@ export default function Enroll({userHabits, setUserHabits, loggedUser, setLogged
     })
     let res = await req.json()
     if (req.ok) {
-      setUserHabits(res)
-      // console.log(userHabits," new habit")
-      const added = allHabits.filter((habit) => {
-        return allHabits.id !== habit
-      }) 
-      setUserHabits(added) 
+      if(!userHabits.includes(res)) {
+        setUserHabits(prevState => [...prevState, res])
+      } else {
+        return prevState
+      }
     }
   }
 
